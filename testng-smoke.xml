@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="TFS Android Smoke" verbose="1" parallel="false" preserve-order="true">
+    <listeners>
+        <listener class-name="com.tfs.listeners.UniqueTestIdInterceptor"/>
+    </listeners>
+    <test name="Smoke">
+        <groups><run><include name="smoke"/></run></groups>
+        <packages><package name="com.tfs.utils"/></packages>
+    </test>
+</suite>

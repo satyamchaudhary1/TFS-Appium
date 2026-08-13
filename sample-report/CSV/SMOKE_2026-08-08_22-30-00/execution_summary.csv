@@ -1,0 +1,2 @@
+Suite,Environment,Start_Time,End_Time,Duration,Total,Pass,Fail,Blocked,Skipped,Infrastructure_Failed
+SMOKE,QA,2026-08-08 22:30:00,2026-08-08 22:31:02,00:01:02.000,2,2,0,0,0,0

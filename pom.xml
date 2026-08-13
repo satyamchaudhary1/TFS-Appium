@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.tfs</groupId>
+    <artifactId>tfs-android-automation</artifactId>
+    <version>1.0.0</version>
+    <name>TFS Android Automation Framework</name>
+
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <appium.version>10.1.1</appium.version>
+        <selenium.version>4.43.0</selenium.version>
+        <testng.version>7.11.0</testng.version>
+        <suiteXmlFile></suiteXmlFile>
+        <suite.name>MANUAL</suite.name>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.appium</groupId><artifactId>java-client</artifactId><version>${appium.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId><artifactId>selenium-java</artifactId><version>${selenium.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId><artifactId>testng</artifactId><version>${testng.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.13.0</version>
+                <configuration><release>${maven.compiler.release}</release></configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.2</version>
+                <configuration>
+                    <failIfNoTests>false</failIfNoTests>
+                    <systemPropertyVariables><suite.name>${suite.name}</suite.name></systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>smoke</id>
+            <properties><suite.name>SMOKE</suite.name></properties>
+            <build><plugins><plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>
+                <configuration><suiteXmlFiles><suiteXmlFile>testng-smoke.xml</suiteXmlFile></suiteXmlFiles></configuration>
+            </plugin></plugins></build>
+        </profile>
+        <profile>
+            <id>regression</id>
+            <properties><suite.name>REGRESSION</suite.name></properties>
+            <build><plugins><plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>
+                <configuration><suiteXmlFiles><suiteXmlFile>testng-regression.xml</suiteXmlFile></suiteXmlFiles></configuration>
+            </plugin></plugins></build>
+        </profile>
+    </profiles>
+</project>

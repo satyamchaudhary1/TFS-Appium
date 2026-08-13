@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite
+        name="TFS Smoke Suite"
+        parallel="false"
+        preserve-order="true">
+
+    <test
+            name="TFS Android Smoke"
+            preserve-order="true">
+
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+
+        <classes>
+
+            <!-- Priority 1 / TC_001 -->
+            <class name="com.tfs.tests.setup.ApkValidationTest"/>
+
+            <!-- Priority 2 / TC_002 -->
+            <class name="com.tfs.tests.setup.SplashScreenTest"/>
+
+            <!-- Priority 3 / TC_003 -->
+            <class name="com.tfs.tests.authentication.LoginTest"/>
+
+            <!-- Priority 4 / TC_004 -->
+            <class name="com.tfs.tests.authentication.SignUpTest"/>
+
+        </classes>
+
+    </test>
+
+</suite>

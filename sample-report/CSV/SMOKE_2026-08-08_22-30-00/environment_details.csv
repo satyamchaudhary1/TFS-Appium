@@ -1,0 +1,4 @@
+Key,Value
+Suite,SMOKE
+Environment,QA
+Isolation_Mode,FULL_APP_RESET

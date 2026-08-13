@@ -1,0 +1,121 @@
+﻿Test_Case_ID,Title,Module,Code_Status,Execution_Eligibility
+TC_001,Installation,Setup / Launch,NOT_IMPLEMENTED,Do not execute until implemented
+TC_002,Splash Screen / Video Play on auth Screen.,Setup / Launch,NOT_IMPLEMENTED,Do not execute until implemented
+TC_003,Landing Page,Authentication / Landing,NOT_IMPLEMENTED,Do not execute until implemented
+TC_004,Login / Sign Up Page,Authentication / Landing,NOT_IMPLEMENTED,Do not execute until implemented
+TC_005,Login - Forgot password,Authentication / Landing,NOT_IMPLEMENTED,Do not execute until implemented
+TC_006,Home page - Promotional Banners,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_007,Home page - Search,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_008,Home page - Map,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_009,Home page - Best Sellers,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_010,Home page - For Her,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_011,Home page - For Him,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_012,Home page - Gift Sets,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_013,Home page - Free Gifts,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_014,Home page - New In,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_015,Home page - Sale,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_016,Home page - Niche,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_017,Home page - Best Sellers >> Applied Fliter,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_018,Home Page- Discover More Section.,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_019,Home Page- Fragrance Match,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_020,Home Page- Every Human,Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_021,"Home Page- Follow & Share on
+Intsagram, FB, X, tiktok and share icon.",Home Page,NOT_IMPLEMENTED,Do not execute until implemented
+TC_022,Side nav or Mega menu,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_023,Fragrance Match,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_024,Home page - Mega Menu - Shop All,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_025,Home page - Mega Menu - Womens,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_026,Home page - Mega Menu - Men,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_027,Home page - Mega Menu - Gifting,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_028,Home page - Mega Menu - Sale,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_029,Home page - Mega Menu - Niche,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_030,Home page - Mega Menu - Discover,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_031,Home page - Mega Menu - Brand,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_032,Home page -Mega Menu - Scentaddict,Mega Menu / Navigation,NOT_IMPLEMENTED,Do not execute until implemented
+TC_033,Homepage- Product listing (PLP),PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_034,Home page- Product listing- Sort - Price: High to Low,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_035,Home page- Product listing- Sort - Price: Low to High,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_036,Home page- Product listing- Sort- Product Name: A - Z,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_037,Home page- Product listing- Sort- Product Name: Z - A,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_038,Home page- Product listing- Sort- Saving GBP,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_039,Home page- Product listing- Sort - Bestseller,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_040,Home page- Product listing- Sort- Review Rating,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_041,Home page- Product listing- Sort - Release Date,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_042,Home page- Product listing- Sort - Relevance,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_043,Homepage- Product Listing- Filter,PLP,NOT_IMPLEMENTED,Do not execute until implemented
+TC_044,Homepage- Product Detail Page (PLP),PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_045,Homepage- PDP- Check Store Locator,PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_046,Homepage- Product Listing- Product Details- Add to bag,PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_047,Home- Side Menu- Select Brand,PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_048,Home- Side Menu- Select Brand- DIOR,PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_049,Home- Side Menu- Select Brand- CHANEL,PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_050,Home- Side Menu- Select Brand- Calvin Klein's,PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_051,Home- Side Menu- Select Brand- Rabanne,PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_052,Home- Side Menu- Select Brand- Rabanne- Sort & Filter,PDP / Brands,NOT_IMPLEMENTED,Do not execute until implemented
+TC_053,My Basket ( no subscriptions ),Basket / Checkout,NOT_IMPLEMENTED,Do not execute until implemented
+TC_054,My Basket ( With subscriptions ),Basket / Checkout,NOT_IMPLEMENTED,Do not execute until implemented
+TC_055,Checkout Page ( no subscriptions ),Basket / Checkout,NOT_IMPLEMENTED,Do not execute until implemented
+TC_056,Checkout Page ( With subscriptions ),Basket / Checkout,NOT_IMPLEMENTED,Do not execute until implemented
+TC_057,Checkout Page - Payment Failed Status,Basket / Checkout,NOT_IMPLEMENTED,Do not execute until implemented
+TC_058,Checkout Page - Via Apple Pay Payment Successfully Status,Basket / Checkout,NOT_IMPLEMENTED,Do not execute until implemented
+TC_059,Profile section for Non-Logged in User,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_060,Profile section for Logged in User,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_061,Profile section for Active Member,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_062,Profile- Add to Apple Wallet,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_063,Profile- My Details,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_064,Profile- My Details- MY personal Details,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_065,Profile- My Details- Change My Password,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_066,Profile- My Details- My Address Book,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_067,Profile- My Details- Marketing Preferences,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_068,Profile- Delivery- Track Order- Home Delivery,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_069,Profile- My Orders- Order History (if Order is delivered),Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_070,Profile- Contact Us,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_071,Profile- FAQs,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_072,Profile- Enable Biometrics,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_073,Profile- Favourites,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_074,Profile- My Matches,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_075,Profile- Scentaddict,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_076,Profile- Delete My Account,Profile,NOT_IMPLEMENTED,Do not execute until implemented
+TC_077,Home page- Quicklink- My Membership,Membership / Orders,NOT_IMPLEMENTED,Do not execute until implemented
+TC_078,Membership - Add to Cart,Membership / Orders,NOT_IMPLEMENTED,Do not execute until implemented
+TC_079,Add to cart product with membership,Membership / Orders,NOT_IMPLEMENTED,Do not execute until implemented
+TC_080,Membership User- Checkout,Membership / Orders,NOT_IMPLEMENTED,Do not execute until implemented
+TC_081,Checkout Page - Payment Failed Status,Membership / Orders,NOT_IMPLEMENTED,Do not execute until implemented
+TC_082,Checkout Page - Payment Successfully Status,Membership / Orders,NOT_IMPLEMENTED,Do not execute until implemented
+TC_083,Check the refund amount functionality after cancelling the order.,Membership / Orders,NOT_IMPLEMENTED,Do not execute until implemented
+TC_084,Check Scentaddict- Browse All Fragrance,Scentaddict,NOT_IMPLEMENTED,Do not execute until implemented
+TC_085,Check the SA Journey as Guest User,Scentaddict,NOT_IMPLEMENTED,Do not execute until implemented
+TC_086,Add to Basket- Multiple products,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_087,Add to Basket- Same products,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_088,Home page- Product Detail page- My Basket,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_089,Home page- PDP- Check In Store,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_090,Home page- PDP- Check In Store (Store images),Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_091,Home Page- My Bag- Gift wrap this item,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_092,Homepage- My Bag- Add a greeting card,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_093,My Basket Details - Product-Order Total,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_094,Basket Details- Promotion code,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_095,Basket Details- Promotion code (Dual Promo Verification),Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_096,Basket Details - Add an Additional gift,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_097,Split Basket- Add products to Basket,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_098,My Basket- My TFS Menbership Join cart,Basket,NOT_IMPLEMENTED,Do not execute until implemented
+TC_099,As a Standard User check the Payment Menthod Pay by Card during Checkout the Product.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_100,As a Standard User check the Payment Menthod Clear Pay during Checkout the Product.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_101,As a Standard User check the Payment Menthod Klarna during Checkout the Product.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_102,As a Standard User check the Payment Menthod Paypal during Checkout the Product.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_103,As a Standard User check the Payment Menthod Revolute Pay during Checkout the Product.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_104,As a Standard User check the Payment Menthod Apple Pay during Checkout the Product.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_105,As a Standard User try if one payment method fails then user able to selects different payment method.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_106,As a Standard User try if 2 different payment method fails then user able to selects 3rd payment method.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_107,As a Standard User Check Saved addres if Payment is Failed.,Payments,NOT_IMPLEMENTED,Do not execute until implemented
+TC_108,Checkout screen-  Delivery Method,Delivery,NOT_IMPLEMENTED,Do not execute until implemented
+TC_109,Checkout screen- Delivery Method- Choose your Delivery Type,Delivery,NOT_IMPLEMENTED,Do not execute until implemented
+TC_110,"Checkout screen- Delivery Method- Choose your Delivery Type- 
+Standard Delivery-   £3.49 
+Express Delivery-    £0
+Next Day Delivery-  £4.99",Delivery,NOT_IMPLEMENTED,Do not execute until implemented
+TC_111,Checkout screen- Delivery Method- Collect Options,Delivery,NOT_IMPLEMENTED,Do not execute until implemented
+TC_112,"Checkout screen- Delivery Method- Collect Options- Click and Collect- 
+1) Same Day *Click and Collect-   £0 
+2) Post Office Local Collect 24 hour-  £3.99",Delivery,NOT_IMPLEMENTED,Do not execute until implemented
+TC_113,Check the Force Update functionality,Engagement / Configuration,NOT_IMPLEMENTED,Do not execute until implemented
+TC_114,Check Rate & Review popup after app installation and usage.,Engagement / Configuration,NOT_IMPLEMENTED,Do not execute until implemented

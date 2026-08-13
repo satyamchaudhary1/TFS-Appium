@@ -1,0 +1,9 @@
+target/
+.idea/
+*.iml
+apps/*.apk
+reports/CSV/*
+!reports/CSV/.gitkeep
+logs/*
+!logs/.gitkeep
+*.log
