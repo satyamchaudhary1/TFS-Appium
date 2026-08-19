@@ -380,7 +380,9 @@ public class LoginPage extends BasePage {
 
     public void clickLogin() {
 
-        System.out.println("[ACTION] Clicking Log In button...");
+        System.out.println(
+                "[ACTION] Clicking Log In button..."
+        );
 
         /*
          * Sometimes Android keyboard remains active after
@@ -394,63 +396,34 @@ public class LoginPage extends BasePage {
                     "[INFO] Keyboard hidden before Log In."
             );
 
-            pause(500);
+            pause(
+                    500
+            );
 
         } catch (Exception ignored) {
-            // Keyboard was already hidden.
+
+            System.out.println(
+                    "[INFO] Keyboard was already hidden."
+            );
         }
 
 
-        WebElement loginButton = null;
-
         /*
-         * First find the actual Log In element.
+         * Attempt 1 - always locate a FRESH Log In element.
          */
-        try {
-
-            WebDriverWait wait =
-                    new WebDriverWait(
-                            driver,
-                            Duration.ofSeconds(15)
-                    );
-
-            loginButton =
-                    wait.until(
-                            ExpectedConditions.elementToBeClickable(
-                                    LOGIN_BUTTON_ACCESSIBILITY
-                            )
-                    );
-
-        } catch (Exception ignored) {
-
-            try {
-
-                WebDriverWait wait =
-                        new WebDriverWait(
-                                driver,
-                                Duration.ofSeconds(10)
-                        );
-
-                loginButton =
-                        wait.until(
-                                ExpectedConditions.elementToBeClickable(
-                                        LOGIN_BUTTON_XPATH
-                                )
-                        );
-
-            } catch (Exception e) {
-
-                throw new AssertionError(
-                        "Log In button was not found.",
-                        e
+        WebElement loginButton =
+                findFreshLoginButton(
+                        15
                 );
-            }
+
+        if (loginButton == null) {
+
+            throw new AssertionError(
+                    "Log In button was not found."
+            );
         }
 
 
-        /*
-         * Attempt 1 - normal Appium click
-         */
         try {
 
             loginButton.click();
@@ -462,82 +435,25 @@ public class LoginPage extends BasePage {
         } catch (Exception e) {
 
             System.out.println(
-                    "[INFO] Normal Log In click failed."
+                    "[WARN] Normal Log In click failed : "
+                            + e.getClass()
+                            .getSimpleName()
+                            + " - "
+                            + e.getMessage()
             );
         }
 
 
-        pause(2500);
-
-
         /*
-         * Confirm something actually happened.
-         *
-         * Either:
-         * - Login screen disappears
-         * - Login error appears
+         * Give the app enough time to process the first click.
+         * Do not reuse the original WebElement after this point,
+         * because React Native may re-render the Log In button.
          */
-        if (!isLoginScreenCurrentlyDisplayed()
-                || isLoginErrorDisplayed()) {
-
-            System.out.println(
-                    "[PASS] Log In button clicked successfully."
-            );
-
-            return;
-        }
-
-
-        /*
-         * Attempt 2
-         *
-         * The normal element click did not trigger navigation.
-         * Tap the CENTER of the actual button.
-         *
-         * This is dynamic, NOT a hardcoded device coordinate.
-         */
-        System.out.println(
-                "[INFO] Normal click did not trigger Login. Retrying with gesture."
+        pause(
+                3000
         );
 
-        try {
 
-            int centerX =
-                    loginButton.getRect().getX()
-                            + loginButton.getRect().getWidth() / 2;
-
-            int centerY =
-                    loginButton.getRect().getY()
-                            + loginButton.getRect().getHeight() / 2;
-
-
-            driver.executeScript(
-                    "mobile: clickGesture",
-                    java.util.Map.of(
-                            "x", centerX,
-                            "y", centerY
-                    )
-            );
-
-            System.out.println(
-                    "[INFO] Gesture click sent to Log In button."
-            );
-
-        } catch (Exception e) {
-
-            throw new AssertionError(
-                    "Unable to click Log In button.",
-                    e
-            );
-        }
-
-
-        pause(3000);
-
-
-        /*
-         * Final confirmation
-         */
         if (!isLoginScreenCurrentlyDisplayed()
                 || isLoginErrorDisplayed()) {
 
@@ -550,12 +466,213 @@ public class LoginPage extends BasePage {
 
 
         /*
-         * Do NOT continue to Home validation when
-         * the Login screen is still visible.
+         * Attempt 2 - fallback gesture.
+         *
+         * IMPORTANT:
+         * Re-find the button before EVERY gesture attempt.
+         * The old element may be stale after the first click.
          */
+        System.out.println(
+                "[INFO] Normal click did not trigger Login. Retrying with fresh-element gesture."
+        );
+
+
+        Exception lastGestureException =
+                null;
+
+        for (int attempt = 1;
+             attempt <= 3;
+             attempt++) {
+
+            /*
+             * Login may finish while we are preparing the fallback.
+             */
+            if (!isLoginScreenCurrentlyDisplayed()
+                    || isLoginErrorDisplayed()) {
+
+                System.out.println(
+                        "[PASS] Login transition completed before fallback gesture."
+                );
+
+                return;
+            }
+
+
+            System.out.println(
+                    "[INFO] Gesture Retry Attempt : "
+                            + attempt
+                            + "/3"
+            );
+
+
+            WebElement freshLoginButton =
+                    findFreshLoginButton(
+                            5
+                    );
+
+
+            if (freshLoginButton == null) {
+
+                System.out.println(
+                        "[INFO] Fresh Log In element not found on gesture attempt "
+                                + attempt
+                                + ". Re-checking page transition."
+                );
+
+                pause(
+                        500
+                );
+
+                if (!isLoginScreenCurrentlyDisplayed()
+                        || isLoginErrorDisplayed()) {
+
+                    System.out.println(
+                            "[PASS] Login transition completed."
+                    );
+
+                    return;
+                }
+
+                continue;
+            }
+
+
+            try {
+
+                org.openqa.selenium.Rectangle loginRect =
+                        freshLoginButton.getRect();
+
+                int centerX =
+                        loginRect.getX()
+                                + loginRect.getWidth() / 2;
+
+                int centerY =
+                        loginRect.getY()
+                                + loginRect.getHeight() / 2;
+
+
+                System.out.println(
+                        "[INFO] Fresh Log In Bounds : [x="
+                                + loginRect.getX()
+                                + ", y="
+                                + loginRect.getY()
+                                + ", width="
+                                + loginRect.getWidth()
+                                + ", height="
+                                + loginRect.getHeight()
+                                + "]"
+                );
+
+                System.out.println(
+                        "[INFO] Fresh Log In Center : "
+                                + centerX
+                                + ", "
+                                + centerY
+                );
+
+
+                driver.executeScript(
+                        "mobile: clickGesture",
+                        java.util.Map.of(
+                                "x",
+                                centerX,
+                                "y",
+                                centerY
+                        )
+                );
+
+
+                System.out.println(
+                        "[INFO] Gesture click sent to FRESH Log In button."
+                );
+
+
+                pause(
+                        2500
+                );
+
+
+                if (!isLoginScreenCurrentlyDisplayed()
+                        || isLoginErrorDisplayed()) {
+
+                    System.out.println(
+                            "[PASS] Log In button clicked successfully."
+                    );
+
+                    return;
+                }
+
+
+                System.out.println(
+                        "[INFO] Login screen still displayed after gesture attempt "
+                                + attempt
+                                + "."
+                );
+
+            } catch (org.openqa.selenium.StaleElementReferenceException e) {
+
+                lastGestureException =
+                        e;
+
+                System.out.println(
+                        "[WARN] Log In element became stale on gesture attempt "
+                                + attempt
+                                + ". Re-finding element before retry."
+                );
+
+                pause(
+                        400
+                );
+
+            } catch (Exception e) {
+
+                lastGestureException =
+                        e;
+
+                System.out.println(
+                        "[WARN] Gesture attempt "
+                                + attempt
+                                + " failed : "
+                                + e.getClass()
+                                .getSimpleName()
+                                + " - "
+                                + e.getMessage()
+                );
+
+                pause(
+                        400
+                );
+            }
+        }
+
+
+        /*
+         * One final page-state check before declaring failure.
+         */
+        if (!isLoginScreenCurrentlyDisplayed()
+                || isLoginErrorDisplayed()) {
+
+            System.out.println(
+                    "[PASS] Log In action completed."
+            );
+
+            return;
+        }
+
+
         System.out.println(
                 "[FAIL] Log In button was tapped but Login screen did not change."
         );
+
+
+        if (lastGestureException != null) {
+
+            throw new AssertionError(
+                    "Unable to click Log In button after fresh-element retries.",
+                    lastGestureException
+            );
+        }
+
 
         throw new AssertionError(
                 "Log In button did not perform login. Login screen is still displayed."
@@ -846,6 +963,56 @@ public class LoginPage extends BasePage {
 
 
         return false;
+    }
+
+
+    private WebElement findFreshLoginButton(
+            int timeoutSeconds
+    ) {
+
+        /*
+         * Always return a newly located element.
+         * Never cache/reuse the Log In WebElement across a UI re-render.
+         */
+        try {
+
+            WebDriverWait wait =
+                    new WebDriverWait(
+                            driver,
+                            Duration.ofSeconds(
+                                    timeoutSeconds
+                            )
+                    );
+
+            return wait.until(
+                    ExpectedConditions.elementToBeClickable(
+                            LOGIN_BUTTON_ACCESSIBILITY
+                    )
+            );
+
+        } catch (Exception accessibilityException) {
+
+            try {
+
+                WebDriverWait wait =
+                        new WebDriverWait(
+                                driver,
+                                Duration.ofSeconds(
+                                        timeoutSeconds
+                                )
+                        );
+
+                return wait.until(
+                        ExpectedConditions.elementToBeClickable(
+                                LOGIN_BUTTON_XPATH
+                        )
+                );
+
+            } catch (Exception xpathException) {
+
+                return null;
+            }
+        }
     }
 
 

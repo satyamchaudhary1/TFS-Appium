@@ -73,11 +73,142 @@ public class SignUpPage extends BasePage {
 
     public boolean isCreateAccountButtonDisplayed() {
 
-        return isDisplayed(
-                CREATE_ACCOUNT_ACCESSIBILITY
-        ) || isDisplayed(
-                CREATE_ACCOUNT_FALLBACK
+        System.out.println(
+                "[STEP] Waiting for Create Account button."
         );
+
+        System.out.println(
+                "[EXPECTED] Authentication landing screen should finish rendering and Create Account should become visible."
+        );
+
+        try {
+
+            WebDriverWait wait =
+                    new WebDriverWait(
+                            driver,
+                            Duration.ofSeconds(30)
+                    );
+
+            Boolean displayed =
+                    wait.until(
+                            d -> {
+
+                                /*
+                                 * Always locate fresh elements on every poll.
+                                 * The Auth landing screen can re-render after
+                                 * the Data Collection popup is accepted.
+                                 */
+                                try {
+
+                                    List<WebElement> accessibilityMatches =
+                                            d.findElements(
+                                                    CREATE_ACCOUNT_ACCESSIBILITY
+                                            );
+
+                                    for (WebElement element : accessibilityMatches) {
+
+                                        try {
+
+                                            if (element.isDisplayed()) {
+
+                                                System.out.println(
+                                                        "[INFO] Create Account found using accessibility id."
+                                                );
+
+                                                return true;
+                                            }
+
+                                        } catch (org.openqa.selenium.StaleElementReferenceException ignored) {
+
+                                            /*
+                                             * The landing screen re-rendered.
+                                             * WebDriverWait will poll again and
+                                             * locate a fresh element.
+                                             */
+                                        }
+                                    }
+
+
+                                    List<WebElement> fallbackMatches =
+                                            d.findElements(
+                                                    CREATE_ACCOUNT_FALLBACK
+                                            );
+
+                                    for (WebElement element : fallbackMatches) {
+
+                                        try {
+
+                                            if (element.isDisplayed()) {
+
+                                                System.out.println(
+                                                        "[INFO] Create Account found using fallback locator."
+                                                );
+
+                                                return true;
+                                            }
+
+                                        } catch (org.openqa.selenium.StaleElementReferenceException ignored) {
+
+                                            /*
+                                             * Re-render race. Retry with a
+                                             * newly located element.
+                                             */
+                                        }
+                                    }
+
+                                } catch (org.openqa.selenium.StaleElementReferenceException ignored) {
+
+                                    /*
+                                     * Entire lookup became stale during the
+                                     * React Native re-render. Retry safely.
+                                     */
+                                } catch (Exception ignored) {
+
+                                    /*
+                                     * Temporary Appium/UI lookup issue.
+                                     * Continue polling until timeout.
+                                     */
+                                }
+
+                                return false;
+                            }
+                    );
+
+
+            boolean result =
+                    Boolean.TRUE.equals(
+                            displayed
+                    );
+
+
+            System.out.println(
+                    "[RESULT] Create Account Button Ready : "
+                            + (result ? "PASS" : "FAIL")
+            );
+
+
+            return result;
+
+        } catch (TimeoutException e) {
+
+            System.out.println(
+                    "[FAIL] Create Account button was not displayed within 30 seconds after Data Collection."
+            );
+
+            return false;
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "[FAIL] Create Account visibility check failed : "
+                            + e.getClass()
+                            .getSimpleName()
+                            + " - "
+                            + e.getMessage()
+            );
+
+            return false;
+        }
     }
 
 
