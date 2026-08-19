@@ -99,6 +99,7 @@ public class AuthStartupFlow {
         while (System.currentTimeMillis()
                 < timeout) {
 
+
             // --------------------------------------------------
             // MEDIA PERMISSION
             // --------------------------------------------------
@@ -125,8 +126,8 @@ public class AuthStartupFlow {
 
                 /*
                  * Continue polling after permission.
-                 * DO NOT immediately assume video should
-                 * already be rendered.
+                 * Do not immediately assume the video
+                 * is already rendered.
                  */
                 continue;
             }
@@ -174,7 +175,7 @@ public class AuthStartupFlow {
 
 
     // ==========================================================
-    // TC_003 + TC_004
+    // TC_003 + TC_004 + TC_005 + FUTURE TESTS
     // NAVIGATE TO AUTH LANDING
     // ==========================================================
 
@@ -199,9 +200,14 @@ public class AuthStartupFlow {
                         + 60000;
 
 
-        boolean permissionHandled = false;
-        boolean continueHandled = false;
-        boolean dataCollectionHandled = false;
+        boolean permissionHandled =
+                false;
+
+        boolean continueHandled =
+                false;
+
+        boolean dataCollectionHandled =
+                false;
 
 
         while (System.currentTimeMillis()
@@ -227,7 +233,8 @@ public class AuthStartupFlow {
                 );
 
 
-                permissionHandled = true;
+                permissionHandled =
+                        true;
 
 
                 System.out.println(
@@ -245,7 +252,7 @@ public class AuthStartupFlow {
 
 
             // ==================================================
-            // 2. AUTH VIDEO / CONTINUE
+            // 2. AUTH CONTINUE BUTTON
             // ==================================================
 
             if (isDisplayed(
@@ -261,7 +268,8 @@ public class AuthStartupFlow {
                         .clickContinue();
 
 
-                continueHandled = true;
+                continueHandled =
+                        true;
 
 
                 System.out.println(
@@ -278,28 +286,14 @@ public class AuthStartupFlow {
             }
 
 
-            /*
-             * Video may already be playing while the
-             * Continue button has not appeared yet.
-             *
-             * In that situation we simply WAIT.
-             */
-            if (isDisplayed(
-                    AUTH_VIDEO
-            )) {
-
-                pause(
-                        500
-                );
-
-                continue;
-            }
-
-
             // ==================================================
             // 3. DATA COLLECTION
             // ==================================================
 
+            /*
+             * Handle the popup before treating the underlying
+             * Authentication Landing screen as ready.
+             */
             if (isDisplayed(
                     DATA_COLLECTION_ACCEPT
             )) {
@@ -316,7 +310,8 @@ public class AuthStartupFlow {
 
                 if (accepted) {
 
-                    dataCollectionHandled = true;
+                    dataCollectionHandled =
+                            true;
 
 
                     System.out.println(
@@ -335,10 +330,35 @@ public class AuthStartupFlow {
 
 
             // ==================================================
-            // 4. AUTH LANDING READY
+            // 4. AUTHENTICATION LANDING READY
             // ==================================================
 
-            if (isAuthLandingDisplayed()) {
+            /*
+             * IMPORTANT:
+             *
+             * Sign In / Create Account is the actual final state
+             * required by TC_003, TC_004, TC_005 and later tests.
+             *
+             * Check this BEFORE AUTH_VIDEO.
+             *
+             * ExoPlayer can remain visible in Appium XML even
+             * after the real Authentication Landing screen has
+             * already appeared.
+             */
+            boolean signInDisplayed =
+                    isDisplayed(
+                            SIGN_IN_BUTTON
+                    );
+
+
+            boolean createAccountDisplayed =
+                    isDisplayed(
+                            CREATE_ACCOUNT_BUTTON
+                    );
+
+
+            if (signInDisplayed
+                    || createAccountDisplayed) {
 
                 System.out.println();
                 System.out.println(
@@ -347,7 +367,27 @@ public class AuthStartupFlow {
 
 
                 System.out.println(
-                        "[STARTUP] Permission handled     : "
+                        "[STARTUP] Sign In displayed        : "
+                                + (
+                                signInDisplayed
+                                        ? "YES"
+                                        : "NO"
+                        )
+                );
+
+
+                System.out.println(
+                        "[STARTUP] Create Account displayed : "
+                                + (
+                                createAccountDisplayed
+                                        ? "YES"
+                                        : "NO"
+                        )
+                );
+
+
+                System.out.println(
+                        "[STARTUP] Permission handled       : "
                                 + yesNo(
                                 permissionHandled
                         )
@@ -355,7 +395,7 @@ public class AuthStartupFlow {
 
 
                 System.out.println(
-                        "[STARTUP] Auth Continue handled : "
+                        "[STARTUP] Auth Continue handled    : "
                                 + yesNo(
                                 continueHandled
                         )
@@ -363,7 +403,7 @@ public class AuthStartupFlow {
 
 
                 System.out.println(
-                        "[STARTUP] Data Collection handled: "
+                        "[STARTUP] Data Collection handled  : "
                                 + yesNo(
                                 dataCollectionHandled
                         )
@@ -379,10 +419,37 @@ public class AuthStartupFlow {
             }
 
 
+            // ==================================================
+            // 5. AUTH VIDEO STILL PRESENT
+            // ==================================================
+
             /*
-             * Nothing is currently actionable.
-             * The application may simply still be loading.
+             * Video can legitimately be displayed while waiting
+             * for Continue.
+             *
+             * It can also remain in the Appium hierarchy after
+             * Continue/Data Collection have already completed.
+             *
+             * That is why the Landing check above always gets
+             * priority over this condition.
              */
+            if (isDisplayed(
+                    AUTH_VIDEO
+            )) {
+
+                pause(
+                        500
+                );
+
+
+                continue;
+            }
+
+
+            // ==================================================
+            // 6. APPLICATION STILL LOADING
+            // ==================================================
+
             pause(
                     500
             );
@@ -390,8 +457,44 @@ public class AuthStartupFlow {
 
 
         // ======================================================
-        // TIMEOUT
+        // TIMEOUT DIAGNOSTICS
         // ======================================================
+
+        boolean videoDisplayed =
+                isDisplayed(
+                        AUTH_VIDEO
+                );
+
+
+        boolean continueDisplayed =
+                isDisplayed(
+                        CONTINUE_BUTTON
+                );
+
+
+        boolean permissionDisplayed =
+                isDisplayed(
+                        MEDIA_PERMISSION_ALLOW
+                );
+
+
+        boolean dataCollectionDisplayed =
+                isDisplayed(
+                        DATA_COLLECTION_ACCEPT
+                );
+
+
+        boolean signInDisplayed =
+                isDisplayed(
+                        SIGN_IN_BUTTON
+                );
+
+
+        boolean createAccountDisplayed =
+                isDisplayed(
+                        CREATE_ACCOUNT_BUTTON
+                );
+
 
         System.out.println();
         System.out.println(
@@ -400,51 +503,56 @@ public class AuthStartupFlow {
 
 
         System.out.println(
-                "[DEBUG] Video displayed         : "
-                        + isDisplayed(
-                        AUTH_VIDEO
-                )
+                "[DEBUG] Video displayed          : "
+                        + videoDisplayed
         );
 
 
         System.out.println(
-                "[DEBUG] Continue displayed      : "
-                        + isDisplayed(
-                        CONTINUE_BUTTON
-                )
+                "[DEBUG] Continue displayed       : "
+                        + continueDisplayed
         );
 
 
         System.out.println(
-                "[DEBUG] Permission displayed    : "
-                        + isDisplayed(
-                        MEDIA_PERMISSION_ALLOW
-                )
+                "[DEBUG] Permission displayed     : "
+                        + permissionDisplayed
         );
 
 
         System.out.println(
                 "[DEBUG] Data Collection displayed: "
-                        + isDisplayed(
-                        DATA_COLLECTION_ACCEPT
-                )
+                        + dataCollectionDisplayed
         );
 
 
         System.out.println(
-                "[DEBUG] Sign In displayed       : "
-                        + isDisplayed(
-                        SIGN_IN_BUTTON
-                )
+                "[DEBUG] Sign In displayed        : "
+                        + signInDisplayed
         );
 
 
         System.out.println(
-                "[DEBUG] Create Account displayed: "
-                        + isDisplayed(
-                        CREATE_ACCOUNT_BUTTON
-                )
+                "[DEBUG] Create Account displayed : "
+                        + createAccountDisplayed
         );
+
+
+        /*
+         * Final protection for an element appearing at the
+         * exact timeout boundary.
+         */
+        if (signInDisplayed
+                || createAccountDisplayed) {
+
+            System.out.println();
+            System.out.println(
+                    "[PASS] Authentication Landing Screen became ready at timeout boundary."
+            );
+
+
+            return;
+        }
 
 
         throw new AssertionError(
@@ -562,8 +670,8 @@ public class AuthStartupFlow {
 
 
             /*
-             * If element disappeared after click,
-             * the click worked.
+             * If the element disappeared after click,
+             * consider the click successful.
              */
             if (!isDisplayed(
                     locator
@@ -574,6 +682,7 @@ public class AuthStartupFlow {
                                 + elementName
                                 + " clicked successfully."
                 );
+
 
                 return;
             }
@@ -591,7 +700,7 @@ public class AuthStartupFlow {
 
         /*
          * Re-locate before fallback because the first
-         * WebElement may be stale.
+         * WebElement may have become stale.
          */
         elements =
                 driver.findElements(
@@ -629,6 +738,16 @@ public class AuthStartupFlow {
                                 .getRect()
                                 .getHeight()
                                 / 2;
+
+
+        System.out.println(
+                "[STARTUP] "
+                        + elementName
+                        + " center: "
+                        + centerX
+                        + ", "
+                        + centerY
+        );
 
 
         driver.executeScript(
