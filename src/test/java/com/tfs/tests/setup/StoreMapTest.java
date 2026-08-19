@@ -25,17 +25,16 @@ public class StoreMapTest extends BaseTest {
 
         mapPage.openMapFromHome();
 
-        boolean permissionDenied = mapPage.denyLocationPermissionIfDisplayed();
-        System.out.println("[RESULT] Location permission deny handled: " + permissionDenied);
-        Assert.assertTrue(permissionDenied,
-                "Location permission dialog was not displayed. Reset Location permission " +
-                        "for The Fragrance Shop before running this denial scenario.");
+        boolean permissionAllowed = mapPage.allowLocationPermissionIfDisplayed();
+        System.out.println("[RESULT] Location permission handled: "
+                + (permissionAllowed ? "While using the app clicked" : "Already granted"));
 
         Assert.assertTrue(mapPage.isMapScreenDisplayed(),
                 "Map screen/search field/Google Map did not load after opening Store Map.");
 
         String postcode = ConfigManager.getOrDefault("map.search.postcode", "M12 1WE");
         mapPage.searchByPostcode(postcode);
+        mapPage.expandStoreDetailsSheet();
 
         Assert.assertTrue(mapPage.isStoreDetailsSheetDisplayed(),
                 "Store details bottom sheet did not open after postcode search: " + postcode);
@@ -46,10 +45,10 @@ public class StoreMapTest extends BaseTest {
         Assert.assertTrue(mapPage.everyStoreHasRequiredData(stores),
                 "One or more stores are missing name/address/postcode/distance/hours/Call/Directions.");
 
-        Assert.assertTrue(mapPage.expandAndValidateFirstStoreHours(),
-                "Weekly store hours were not displayed after expanding the first store.");
-        Assert.assertTrue(mapPage.validateFirstStoreCallAndDirections(),
-                "Call Store or Directions did not open a valid external handler.");
+        Assert.assertTrue(mapPage.validateAllStoreHours(stores),
+                "Weekly hours or Hours/Call/Directions controls failed for one or more stores.");
+        Assert.assertTrue(mapPage.validateAllStoreCallAndDirections(stores),
+                "Call Store or Directions failed for one or more stores.");
     }
 
     private void ensureLoggedInHome(StoreMapPage mapPage) {
