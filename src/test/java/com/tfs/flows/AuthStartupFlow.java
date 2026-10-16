@@ -4,7 +4,6 @@ import com.tfs.driver.DriverManager;
 import com.tfs.pages.LoginPage;
 import com.tfs.pages.SplashPage;
 
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 
 import org.openqa.selenium.By;
@@ -14,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 public class AuthStartupFlow {
+
+    private static final String APP_PACKAGE = "com.thefragranceshop";
+    private static final long VIDEO_ONLY_RECOVERY_MS = 8000;
 
     private final AndroidDriver driver;
     private final SplashPage splashPage;
@@ -35,8 +37,8 @@ public class AuthStartupFlow {
             );
 
     private static final By CONTINUE_BUTTON =
-            AppiumBy.accessibilityId(
-                    "Continue"
+            By.xpath(
+                    "//*[@text='Continue' or @content-desc='Continue']"
             );
 
     private static final By DATA_COLLECTION_ACCEPT =
@@ -45,13 +47,14 @@ public class AuthStartupFlow {
             );
 
     private static final By SIGN_IN_BUTTON =
-            AppiumBy.accessibilityId(
-                    "Sign In"
+            By.xpath(
+                    "//*[@text='Sign In' or @content-desc='Sign In']"
             );
 
     private static final By CREATE_ACCOUNT_BUTTON =
-            AppiumBy.accessibilityId(
-                    "Create Account"
+            By.xpath(
+                    "//*[@text='Create Account' "
+                            + "or @content-desc='Create Account']"
             );
 
 
@@ -83,7 +86,6 @@ public class AuthStartupFlow {
                 System.currentTimeMillis() + 45000;
 
         while (System.currentTimeMillis() < timeout) {
-
 
             // --------------------------------------------------
             // MEDIA PERMISSION
@@ -139,7 +141,7 @@ public class AuthStartupFlow {
 
 
     // ==========================================================
-    // TC_003 + TC_004 + TC_005 + FUTURE TESTS
+    // TC_003 + TC_004
     // NAVIGATE TO AUTH LANDING
     // ==========================================================
 
@@ -162,6 +164,8 @@ public class AuthStartupFlow {
         boolean permissionHandled = false;
         boolean continueHandled = false;
         boolean dataCollectionHandled = false;
+        boolean videoRecoveryAttempted = false;
+        long videoOnlyStartedAt = 0;
 
         while (System.currentTimeMillis() < timeout) {
 
@@ -203,8 +207,7 @@ public class AuthStartupFlow {
 
                 splashPage.clickContinue();
 
-                continueHandled =
-                        true;
+                continueHandled = true;
 
                 System.out.println(
                         "[STARTUP] Auth Continue handled."
@@ -235,8 +238,7 @@ public class AuthStartupFlow {
 
                 if (accepted) {
 
-                    dataCollectionHandled =
-                            true;
+                    dataCollectionHandled = true;
 
                     System.out.println(
                             "[STARTUP] Data Collection handled."
@@ -249,9 +251,17 @@ public class AuthStartupFlow {
 
 
             // ==================================================
-            // 4. AUTHENTICATION LANDING READY
+            // 4. AUTH LANDING READY
             // ==================================================
 
+            /*
+             * This check must happen before AUTH_VIDEO.
+             *
+             * AUTH_VIDEO remains displayed as the background of
+             * the final authentication landing screen. If the
+             * video is checked first, the loop continues forever
+             * even though Sign In and Create Account are visible.
+             */
             if (isAuthLandingDisplayed()) {
 
                 System.out.println();
@@ -259,26 +269,19 @@ public class AuthStartupFlow {
                         "[PASS] Authentication Landing Screen ready."
                 );
 
-
                 System.out.println(
                         "[STARTUP] Permission handled     : "
-                                + yesNo(
-                                permissionHandled
-                        )
+                                + yesNo(permissionHandled)
                 );
 
                 System.out.println(
                         "[STARTUP] Auth Continue handled : "
-                                + yesNo(
-                                continueHandled
-                        )
+                                + yesNo(continueHandled)
                 );
 
                 System.out.println(
                         "[STARTUP] Data Collection handled: "
-                                + yesNo(
-                                dataCollectionHandled
-                        )
+                                + yesNo(dataCollectionHandled)
                 );
 
                 System.out.println(
@@ -289,55 +292,55 @@ public class AuthStartupFlow {
             }
 
 
-            /*
-             * Nothing is currently actionable.
-             * The application may simply still be loading.
-             */
-            pause(
-                    500
-            );
+            // ==================================================
+            // 5. VIDEO IS PLAYING / SCREEN IS LOADING
+            // ==================================================
+
+            if (isDisplayed(AUTH_VIDEO)) {
+
+                if (videoOnlyStartedAt == 0) {
+                    videoOnlyStartedAt = System.currentTimeMillis();
+                }
+
+                boolean videoStuckAfterConsent =
+                        dataCollectionHandled
+                                && !videoRecoveryAttempted
+                                && System.currentTimeMillis() - videoOnlyStartedAt
+                                >= VIDEO_ONLY_RECOVERY_MS;
+
+                if (videoStuckAfterConsent) {
+                    System.out.println(
+                            "[STARTUP RECOVERY] Video-only screen remained "
+                                    + "after Data Collection. Restarting APK once."
+                    );
+
+                    driver.terminateApp(APP_PACKAGE);
+                    driver.activateApp(APP_PACKAGE);
+
+                    videoRecoveryAttempted = true;
+                    videoOnlyStartedAt = 0;
+                    pause(1500);
+                    continue;
+                }
+
+                pause(500);
+                continue;
+            }
+
+            videoOnlyStartedAt = 0;
+
+
+            // ==================================================
+            // 6. NOTHING ACTIONABLE YET
+            // ==================================================
+
+            pause(500);
         }
 
 
         // ======================================================
-        // TIMEOUT
+        // TIMEOUT DEBUG INFORMATION
         // ======================================================
-
-        boolean videoDisplayed =
-                isDisplayed(
-                        AUTH_VIDEO
-                );
-
-
-        boolean continueDisplayed =
-                isDisplayed(
-                        CONTINUE_BUTTON
-                );
-
-
-        boolean permissionDisplayed =
-                isDisplayed(
-                        MEDIA_PERMISSION_ALLOW
-                );
-
-
-        boolean dataCollectionDisplayed =
-                isDisplayed(
-                        DATA_COLLECTION_ACCEPT
-                );
-
-
-        boolean signInDisplayed =
-                isDisplayed(
-                        SIGN_IN_BUTTON
-                );
-
-
-        boolean createAccountDisplayed =
-                isDisplayed(
-                        CREATE_ACCOUNT_BUTTON
-                );
-
 
         System.out.println();
         System.out.println(
@@ -345,47 +348,39 @@ public class AuthStartupFlow {
         );
 
         System.out.println(
-                "[DEBUG] Video displayed         : "
-                        + isDisplayed(
-                        AUTH_VIDEO
-                )
+                "[DEBUG] Video displayed          : "
+                        + isDisplayed(AUTH_VIDEO)
         );
 
         System.out.println(
-                "[DEBUG] Continue displayed      : "
-                        + isDisplayed(
-                        CONTINUE_BUTTON
-                )
+                "[DEBUG] Continue displayed       : "
+                        + isDisplayed(CONTINUE_BUTTON)
         );
 
         System.out.println(
-                "[DEBUG] Permission displayed    : "
-                        + isDisplayed(
-                        MEDIA_PERMISSION_ALLOW
-                )
+                "[DEBUG] Permission displayed     : "
+                        + isDisplayed(MEDIA_PERMISSION_ALLOW)
         );
 
         System.out.println(
                 "[DEBUG] Data Collection displayed: "
-                        + isDisplayed(
-                        DATA_COLLECTION_ACCEPT
-                )
+                        + isDisplayed(DATA_COLLECTION_ACCEPT)
         );
 
         System.out.println(
-                "[DEBUG] Sign In displayed       : "
-                        + isDisplayed(
-                        SIGN_IN_BUTTON
-                )
+                "[DEBUG] Sign In displayed        : "
+                        + isDisplayed(SIGN_IN_BUTTON)
         );
 
         System.out.println(
-                "[DEBUG] Create Account displayed: "
-                        + isDisplayed(
-                        CREATE_ACCOUNT_BUTTON
-                )
+                "[DEBUG] Create Account displayed : "
+                        + isDisplayed(CREATE_ACCOUNT_BUTTON)
         );
 
+        System.out.println(
+                "[DEBUG] Video recovery attempted : "
+                        + videoRecoveryAttempted
+        );
 
         throw new AssertionError(
                 "Authentication Landing Screen was not ready "
@@ -484,8 +479,8 @@ public class AuthStartupFlow {
             pause(400);
 
             /*
-             * If element disappeared after click,
-             * the click worked.
+             * If the element disappears after clicking,
+             * the normal click was successful.
              */
             if (!isDisplayed(locator)) {
 
@@ -494,7 +489,6 @@ public class AuthStartupFlow {
                                 + elementName
                                 + " clicked successfully."
                 );
-
 
                 return;
             }
@@ -509,10 +503,10 @@ public class AuthStartupFlow {
         }
 
 
-        /*
-         * Re-locate before fallback because the first
-         * WebElement may be stale.
-         */
+        // ------------------------------------------------------
+        // RELOCATE ELEMENT BEFORE FALLBACK GESTURE
+        // ------------------------------------------------------
+
         elements =
                 driver.findElements(locator);
 
@@ -541,16 +535,6 @@ public class AuthStartupFlow {
         int centerY =
                 element.getRect().getY()
                         + element.getRect().getHeight() / 2;
-
-        System.out.println(
-                "[STARTUP] "
-                        + elementName
-                        + " center: "
-                        + centerX
-                        + ", "
-                        + centerY
-        );
-
 
         driver.executeScript(
                 "mobile: clickGesture",

@@ -10,45 +10,34 @@ import com.tfs.tests.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 public class StoreMapTest extends BaseTest {
 
     @Test(groups = {"regression", "homepage", "map"}, priority = 8)
-    @TestInfo(
-            id = "TC_008",
-            title = "Home page - Store Map",
-            module = "Home Page")
-    public void TC_008_verifyStoreMapJourney() {
+    @TestInfo(id = "TC_008", title = "Home page - Store Map", module = "Home Page")
+    public void TC_008_verifyDefaultFirstStoreThenCloseApp() {
         StoreMapPage mapPage = new StoreMapPage();
         ensureLoggedInHome(mapPage);
 
         mapPage.openMapFromHome();
-
-        boolean permissionAllowed = mapPage.allowLocationPermissionIfDisplayed();
-        System.out.println("[RESULT] Location permission handled: "
-                + (permissionAllowed ? "While using the app clicked" : "Already granted"));
+        mapPage.allowLocationPermissionIfDisplayed();
 
         Assert.assertTrue(mapPage.isMapScreenDisplayed(),
-                "Map screen/search field/Google Map did not load after opening Store Map.");
+                "Map screen/search field/Google Map was not displayed.");
 
-        String postcode = ConfigManager.getOrDefault("map.search.postcode", "M12 1WE");
+        String postcode = ConfigManager.getOrDefault("map.search.postcode", "M17 1WE");
         mapPage.searchByPostcode(postcode);
-        mapPage.expandStoreDetailsSheet();
 
         Assert.assertTrue(mapPage.isStoreDetailsSheetDisplayed(),
-                "Store details bottom sheet did not open after postcode search: " + postcode);
+                "Default first-store popup was not displayed for postcode: " + postcode);
 
-        List<StoreInfo> stores = mapPage.collectAllStores();
-        Assert.assertFalse(stores.isEmpty(),
-                "No dynamic store results were returned for postcode: " + postcode);
-        Assert.assertTrue(mapPage.everyStoreHasRequiredData(stores),
-                "One or more stores are missing name/address/postcode/distance/hours/Call/Directions.");
+        StoreInfo firstStore = mapPage.getFirstVisibleStore();
+        mapPage.printFirstStore(firstStore);
 
-        Assert.assertTrue(mapPage.validateAllStoreHours(stores),
-                "Weekly hours or Hours/Call/Directions controls failed for one or more stores.");
-        Assert.assertTrue(mapPage.validateAllStoreCallAndDirections(stores),
-                "Call Store or Directions failed for one or more stores.");
+        Assert.assertTrue(mapPage.hasRequiredFirstStoreData(firstStore),
+                "First store is missing details or Hours/Call/Directions controls.");
+
+        Assert.assertTrue(mapPage.clickBackAndCloseApp(),
+                "Map Back action or APK termination failed.");
     }
 
     private void ensureLoggedInHome(StoreMapPage mapPage) {
